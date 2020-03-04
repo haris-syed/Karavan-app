@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public static Socket socket;
     public static DataInputStream in;
     public static DataOutputStream out;
+    public static Thread conn;
 
 
     @Override
@@ -39,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
                 EditText et_master = (EditText) findViewById(R.id.et_masterip);
                 EditText et_slave = (EditText) findViewById(R.id.et_slaveip);
                 masterIP = et_master.getText().toString();
-                slaveIP = et_master.getText().toString();
+                slaveIP = et_slave.getText().toString();
                 if(masterIP.equals("") || slaveIP.equals("")){
                     Toast.makeText(getApplicationContext(),"Please enter valid IP addresses",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Thread conn = new Thread(new Connection());
+                conn = new Thread(new Connection());
                 conn.start();
                 Intent activeActivity = new Intent(MainActivity.this, ActiveActivity.class);
                 startActivity(activeActivity);

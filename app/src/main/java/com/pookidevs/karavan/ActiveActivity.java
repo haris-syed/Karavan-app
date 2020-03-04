@@ -18,7 +18,7 @@ import java.net.Socket;
 public class ActiveActivity extends AppCompatActivity {
 
     Button b1, b2, b3, b4;
-    ImageView trackImage;
+    ImageView trackImage, marker1, marker2, marker3, marker4;
     /*
     * -1 = disconnected
     * 0 = idle
@@ -42,15 +42,26 @@ public class ActiveActivity extends AppCompatActivity {
         b2 = findViewById(R.id.button2);
         b3 = findViewById(R.id.button3);
         b4 = findViewById(R.id.button4);
-        trackImage = findViewById(R.id.imageView2);
-        status = 0;
+        trackImage = findViewById(R.id.img_track);
+        marker1 = findViewById(R.id.marker1);
+        marker2 = findViewById(R.id.marker2);
+        marker3 = findViewById(R.id.marker3);
+        marker4 = findViewById(R.id.marker4);
+        //status = 0;
         position = 0;
         Thread statusMonitor = new Thread(new statusMonitor());
         statusMonitor.start();
         //runOnUiThread(statusMonitor);
     }
 
-    public void reConnect(View v){
+    public void reConnect(View v) {
+        try {
+            MainActivity.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
         Intent mainIntent = new Intent(ActiveActivity.this, MainActivity.class);
         startActivity(mainIntent);
     }
@@ -58,7 +69,6 @@ public class ActiveActivity extends AppCompatActivity {
 
     //called when a location button is pressed
     public void setDestination(View v){
-        Socket socket = MainActivity.socket;
         switch (v.getId()){
             //#88FF2929 = red
             //#882979FF =blue
@@ -99,15 +109,19 @@ public class ActiveActivity extends AppCompatActivity {
     }
 
     private void enableButtons(){
-        b1.setEnabled(true);
-        b2.setEnabled(true);
-        b3.setEnabled(true);
-        b4.setEnabled(true);
-        b1.setBackgroundColor(Color.parseColor("#882979FF"));
-        b2.setBackgroundColor(Color.parseColor("#882979FF"));
-        b3.setBackgroundColor(Color.parseColor("#882979FF"));
-        b4.setBackgroundColor(Color.parseColor("#882979FF"));
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                b1.setEnabled(true);
+                b2.setEnabled(true);
+                b3.setEnabled(true);
+                b4.setEnabled(true);
+                b1.setBackgroundColor(Color.parseColor("#882979FF"));
+                b2.setBackgroundColor(Color.parseColor("#882979FF"));
+                b3.setBackgroundColor(Color.parseColor("#882979FF"));
+                b4.setBackgroundColor(Color.parseColor("#882979FF"));
+            }
+        });
     }
 
     class goToLocation implements Runnable{
@@ -120,6 +134,12 @@ public class ActiveActivity extends AppCompatActivity {
 
         @Override
         public void run() {
+            try {
+                MainActivity.conn.join();// wait for connection thread to finish
+            } catch (Exception e) {
+                System.err.println(e);
+            }
+
             if(ActiveActivity.status == -1){
                 //not connected so return
                 return;
@@ -138,19 +158,26 @@ public class ActiveActivity extends AppCompatActivity {
             while (!response.equals("end")) {
                 try {
                     response = in.readLine();
+                    if(response == null){ //means the server died
+                        ActiveActivity.status = -1;
+                        ActiveActivity.position = 0;
+                        response="";
+                        System.err.println("Server died");
+                        break;
+                    }
                     if(response.equals("start")){
                         ActiveActivity.status = 1;
                     }
-                    else if (response.equals("1")){
+                    else if (response.equals("p1")){
                         ActiveActivity.position = 1;
                     }
-                    else if (response.equals("2")){
+                    else if (response.equals("p2")){
                         ActiveActivity.position = 2;
                     }
-                    else if (response.equals("3")){
+                    else if (response.equals("p3")){
                         ActiveActivity.position = 3;
                     }
-                    else if (response.equals("4")){
+                    else if (response.equals("p4")){
                         ActiveActivity.position = 4;
                     }
                     else if (response.equals("end")){
@@ -171,8 +198,8 @@ public class ActiveActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            int prevStatus = ActiveActivity.status;
-            int prevPosition = ActiveActivity.position;
+            int prevStatus = -2;
+            int prevPosition = 0;
             while(true){
                 try {
                     //only call if changed (to reduce updates)
@@ -188,9 +215,14 @@ public class ActiveActivity extends AppCompatActivity {
             }
         }
 
+        private void disableMarkers(){
+            marker1.setVisibility(View.INVISIBLE);
+            marker2.setVisibility(View.INVISIBLE);
+            marker3.setVisibility(View.INVISIBLE);
+            marker4.setVisibility(View.INVISIBLE);
+        }
+
         private void displayStatusChange() {
-
-
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -213,6 +245,22 @@ public class ActiveActivity extends AppCompatActivity {
                     tv_status.setText(st_text);
                     tv_status.setBackgroundColor(color);
                     tv_position.setText("Current position: "+ (ActiveActivity.position == 0 ? "Unknown":ActiveActivity.position));
+                    if(ActiveActivity.position == 1){
+                        disableMarkers();
+                        marker1.setVisibility(View.VISIBLE);
+                    }
+                    if(ActiveActivity.position == 2){
+                        disableMarkers();
+                        marker2.setVisibility(View.VISIBLE);
+                    }
+                    if(ActiveActivity.position == 3){
+                        disableMarkers();
+                        marker3.setVisibility(View.VISIBLE);
+                    }
+                    if(ActiveActivity.position == 4){
+                        disableMarkers();
+                        marker4.setVisibility(View.VISIBLE);
+                    }
                 }
             });
 
