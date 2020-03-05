@@ -40,14 +40,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 EditText et_master = (EditText) findViewById(R.id.et_masterip);
                 EditText et_slave = (EditText) findViewById(R.id.et_slaveip);
-                masterIP = et_master.getText().toString();
-                slaveIP = et_slave.getText().toString();
-                if(masterIP.equals("") || slaveIP.equals("")){
+                masterIP = et_master.getText().toString(); //get ip for master
+                slaveIP = et_slave.getText().toString(); //get ip for slave
+                if(masterIP.equals("") || slaveIP.equals("")){ //check if not empty
                     Toast.makeText(getApplicationContext(),"Please enter valid IP addresses",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                conn = new Thread(new Connection());
-                conn.start();
+                conn = new Thread(new Connection()); //new thread for making connection
+                conn.start(); //start thread
+                //switch to Active activity
                 Intent activeActivity = new Intent(MainActivity.this, ActiveActivity.class);
                 startActivity(activeActivity);
 //                Intent intent = getIntent();
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /* Thread class for making connection */
     class Connection implements Runnable {
 
         @Override
@@ -66,15 +68,15 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 //get address
-                InetAddress serverAddr = InetAddress.getByName(masterIP);
+                InetAddress serverAddr = InetAddress.getByName(masterIP); //resolve address
                 //connect to master car
-                socket = new Socket(serverAddr, masterPort);
+                socket = new Socket(serverAddr, masterPort);// make socket
                 //in = new BufferedReader(new InputStreamReader(new DataInputStream(new BufferedInputStream(socket.getInputStream()))));
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                out = new DataOutputStream(socket.getOutputStream());
-                ActiveActivity.status = 0;
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream())); //make input stream
+                out = new DataOutputStream(socket.getOutputStream()); //make output stream
+                ActiveActivity.status = 0; // if no exception was thrown set status to idle
             } catch (UnknownHostException e1) {
-                ActiveActivity.status = -1;
+                ActiveActivity.status = -1; //set status to disconnected
                 e1.printStackTrace();
             } catch (IOException e1) {
                 ActiveActivity.status = -1;

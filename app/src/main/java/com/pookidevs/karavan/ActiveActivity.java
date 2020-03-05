@@ -37,30 +37,36 @@ public class ActiveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active);
+        // get button references
         b1 = findViewById(R.id.button);
         b2 = findViewById(R.id.button2);
         b3 = findViewById(R.id.button3);
         b4 = findViewById(R.id.button4);
+        //get track reference
         trackImage = findViewById(R.id.img_track);
+        //get references for markers
         marker1 = findViewById(R.id.marker1);
         marker2 = findViewById(R.id.marker2);
         marker3 = findViewById(R.id.marker3);
         marker4 = findViewById(R.id.marker4);
         //status = 0;
-        position = 0;
+        position = 0; //initial position unknown
+
+        //start status monitor for updating UI
         Thread statusMonitor = new Thread(new statusMonitor());
         statusMonitor.start();
-        //runOnUiThread(statusMonitor);
     }
 
+    /* Function to reconnect to master car*/
     public void reConnect(View v) {
         try {
-            MainActivity.socket.close();
+            MainActivity.socket.close(); //close the socket
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException e){
             e.printStackTrace();
         }
+        //go to connection screen
         Intent mainIntent = new Intent(ActiveActivity.this, MainActivity.class);
         startActivity(mainIntent);
     }
@@ -71,10 +77,11 @@ public class ActiveActivity extends AppCompatActivity {
         switch (v.getId()){
             //#88FF2929 = red
             //#882979FF =blue
+            //check which button was clicked
             case R.id.button:
-                disableButtons();
-                b1.setBackgroundColor(Color.parseColor("#88FF2929"));
-                Thread t = new Thread ( new goToLocation(1));
+                disableButtons(); //disable buttons
+                b1.setBackgroundColor(Color.parseColor("#88FF2929")); //change color for selected button
+                Thread t = new Thread ( new goToLocation(1)); //launch thread to send location to car
                 t.start();
                 break;
             case R.id.button2:
@@ -107,6 +114,9 @@ public class ActiveActivity extends AppCompatActivity {
         b4.setEnabled(false);
     }
 
+    /*
+    * Enable buttons and reset colors to blue
+    * */
     private void enableButtons(){
         runOnUiThread(new Runnable() {
             @Override
@@ -123,6 +133,8 @@ public class ActiveActivity extends AppCompatActivity {
         });
     }
 
+    /*
+    * Thread to send location to car*/
     class goToLocation implements Runnable{
 
         private int location;
@@ -143,19 +155,19 @@ public class ActiveActivity extends AppCompatActivity {
                 //not connected so return
                 return;
             }
-            Socket s = MainActivity.socket;
+            //fetch streams
             BufferedReader in = (MainActivity.in);
             DataOutputStream out = MainActivity.out;
             try {
-                out.writeUTF("L" + location);
-                out.writeUTF(MainActivity.slaveIP);
+                out.writeUTF("L" + location); //send location
+                out.writeUTF(MainActivity.slaveIP); //send ip of slave
             }
             catch (IOException e){
                 e.printStackTrace();
             }
 
             String response = "";
-            while (!response.equals("end")) {
+            while (!response.equals("end")) { //wait for car to reach destination
                 try {
                     response = in.readLine();
                     if(response == null){ //means the server died
@@ -165,6 +177,7 @@ public class ActiveActivity extends AppCompatActivity {
                         System.err.println("Server died");
                         break;
                     }
+                    //update position and status
                     if(response.equals("start")){
                         ActiveActivity.status = 1;
                     }
@@ -215,6 +228,8 @@ public class ActiveActivity extends AppCompatActivity {
             }
         }
 
+        /*
+        * To hide the markers for positions*/
         private void disableMarkers(){
             marker1.setVisibility(View.INVISIBLE);
             marker2.setVisibility(View.INVISIBLE);
@@ -222,21 +237,23 @@ public class ActiveActivity extends AppCompatActivity {
             marker4.setVisibility(View.INVISIBLE);
         }
 
+        /*
+        * To update the UI according to changed position or status*/
         private void displayStatusChange() {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String st_text = "";
-                    int color = 0;
-                    if(ActiveActivity.status == -1){
+                    String st_text = ""; //text for status
+                    int color = 0; //color of status box
+                    if(ActiveActivity.status == -1){ //disconn
                         st_text = "System Status: Disconnected";
                         color = getResources().getColor(R.color.red);
                     }
-                    else if(ActiveActivity.status == 0){
+                    else if(ActiveActivity.status == 0){ //idle
                         st_text = "System Status: Idle";
                         color = getResources().getColor(R.color.orange);
                     }
-                    else if(ActiveActivity.status == 1){
+                    else if(ActiveActivity.status == 1){ //running
                         st_text = "System Status: Running";
                         color = getResources().getColor(R.color.green);
                     }
@@ -244,6 +261,8 @@ public class ActiveActivity extends AppCompatActivity {
                     TextView tv_position = findViewById(R.id.tv_position);
                     tv_status.setText(st_text);
                     tv_status.setBackgroundColor(color);
+
+                    //update position UI
                     tv_position.setText("Current position: "+ (ActiveActivity.position == 0 ? "Unknown":ActiveActivity.position));
                     if(ActiveActivity.position == 1){
                         disableMarkers();
