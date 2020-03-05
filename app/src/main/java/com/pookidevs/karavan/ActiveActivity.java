@@ -12,7 +12,6 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class ActiveActivity extends AppCompatActivity {
@@ -137,7 +136,7 @@ public class ActiveActivity extends AppCompatActivity {
             try {
                 MainActivity.conn.join();// wait for connection thread to finish
             } catch (Exception e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
 
             if(ActiveActivity.status == -1){
@@ -145,13 +144,14 @@ public class ActiveActivity extends AppCompatActivity {
                 return;
             }
             Socket s = MainActivity.socket;
-            BufferedReader in = new BufferedReader(new InputStreamReader(MainActivity.in));
+            BufferedReader in = (MainActivity.in);
             DataOutputStream out = MainActivity.out;
             try {
                 out.writeUTF("L" + location);
+                out.writeUTF(MainActivity.slaveIP);
             }
             catch (IOException e){
-                System.err.println(e);
+                e.printStackTrace();
             }
 
             String response = "";
@@ -186,7 +186,7 @@ public class ActiveActivity extends AppCompatActivity {
                     }
                     System.out.println(response);
                 } catch (IOException e) {
-                    System.err.println(e);
+                    e.printStackTrace();
                     ActiveActivity.status = -1;
                     break;
                 }
@@ -230,15 +230,15 @@ public class ActiveActivity extends AppCompatActivity {
                     int color = 0;
                     if(ActiveActivity.status == -1){
                         st_text = "System Status: Disconnected";
-                        color = Color.parseColor("#70FF1744");
+                        color = getResources().getColor(R.color.red);
                     }
                     else if(ActiveActivity.status == 0){
                         st_text = "System Status: Idle";
-                        color = Color.parseColor("#70F48024");
+                        color = getResources().getColor(R.color.orange);
                     }
                     else if(ActiveActivity.status == 1){
                         st_text = "System Status: Running";
-                        color = Color.parseColor("#70C6FF00");
+                        color = getResources().getColor(R.color.green);
                     }
                     TextView tv_status = findViewById(R.id.tv_status);
                     TextView tv_position = findViewById(R.id.tv_position);
@@ -249,18 +249,20 @@ public class ActiveActivity extends AppCompatActivity {
                         disableMarkers();
                         marker1.setVisibility(View.VISIBLE);
                     }
-                    if(ActiveActivity.position == 2){
+                    else if(ActiveActivity.position == 2){
                         disableMarkers();
                         marker2.setVisibility(View.VISIBLE);
                     }
-                    if(ActiveActivity.position == 3){
+                    else if(ActiveActivity.position == 3){
                         disableMarkers();
                         marker3.setVisibility(View.VISIBLE);
                     }
-                    if(ActiveActivity.position == 4){
+                    else if(ActiveActivity.position == 4){
                         disableMarkers();
                         marker4.setVisibility(View.VISIBLE);
                     }
+//                    trackImage.setVisibility(View.INVISIBLE);
+//                    trackImage.setVisibility(View.VISIBLE);
                 }
             });
 

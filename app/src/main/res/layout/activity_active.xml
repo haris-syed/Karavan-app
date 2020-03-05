@@ -16,41 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <ImageView
-            android:id="@+id/marker1"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginLeft="38dp"
-            android:layout_marginTop="20dp"
-            android:visibility="invisible"
-            app:srcCompat="@android:drawable/presence_online" />
-
-        <ImageView
-            android:id="@+id/marker2"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginLeft="318dp"
-            android:layout_marginTop="20dp"
-            android:visibility="invisible"
-            app:srcCompat="@android:drawable/presence_online" />
-
-        <ImageView
-            android:id="@+id/marker3"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="250dp"
-            android:visibility="invisible"
-            app:srcCompat="@android:drawable/presence_online" />
-
-        <ImageView
-            android:id="@+id/marker4"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginLeft="325dp"
-            android:layout_marginTop="250dp"
-            android:visibility="invisible"
-            app:srcCompat="@android:drawable/presence_online" />
 
         <Button
             android:id="@+id/button"
@@ -117,22 +82,66 @@
             android:layout_height="314dp"
             android:contentDescription="track image"
             app:srcCompat="@drawable/track" />
+
+        <ImageView
+            android:id="@+id/marker1"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="20dp"
+            android:visibility="invisible"
+            app:srcCompat="@android:drawable/presence_online" />
+
+        <ImageView
+            android:id="@+id/marker2"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="318dp"
+            android:layout_marginTop="20dp"
+            android:visibility="invisible"
+            app:srcCompat="@android:drawable/presence_online" />
+
+        <ImageView
+            android:id="@+id/marker3"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="250dp"
+            android:visibility="invisible"
+            app:srcCompat="@android:drawable/presence_online" />
+
+        <ImageView
+            android:id="@+id/marker4"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="325dp"
+            android:layout_marginTop="250dp"
+            android:visibility="invisible"
+            app:srcCompat="@android:drawable/presence_online" />
+
     </FrameLayout>
 
     <TextView
         android:id="@+id/tv_status"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:background="#70C6FF00"
-        android:paddingLeft="40dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:background="#BC1AFF00"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingLeft="50dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:shadowColor="#4B4545"
+        android:shadowDx="2"
+        android:shadowDy="2"
         android:text="System Status: Running"
+        android:textColor="#FFFDFD"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.039"
         app:layout_constraintStart_toStartOf="parent"
@@ -141,16 +150,23 @@
     <TextView
         android:id="@+id/tv_position"
         android:layout_width="0dp"
-        android:layout_height="41dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:background="#8B00B0FF"
-        android:drawableLeft="@android:drawable/ic_menu_compass"
-        android:padding="10dp"
+        android:drawableStart="@android:drawable/ic_menu_compass"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingLeft="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="10dp"
         android:text="Caravan position: Unknown"
+        android:textColor="#FFFEFE"
+        android:textSize="18sp"
+        app:drawableTint="#063BF8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -162,10 +178,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:background="#FF1744"
+        android:background="@android:color/holo_red_dark"
         android:onClick="reConnect"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

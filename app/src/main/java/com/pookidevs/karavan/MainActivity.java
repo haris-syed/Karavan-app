@@ -9,23 +9,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int masterPort = 1234;
-    public static String masterIP;
-    public static String slaveIP;
-    public static Socket socket;
-    public static DataInputStream in;
-    public static DataOutputStream out;
-    public static Thread conn;
+    private final int masterPort = 1234; //port of master car server
+    public static String masterIP; //master car ip address
+    public static String slaveIP; //slave car ip address
+    public static Socket socket; //socket reference
+    public static BufferedReader in; //socket input stream
+    public static DataOutputStream out; //socket output stream
+    public static Thread conn; //Thread reference for making socket connection
 
 
     @Override
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button makeConnect = (Button) findViewById(R.id.makeConnect);
         makeConnect.setOnClickListener(new View.OnClickListener() {
+            /*connect to server car when button is clicked */
             @Override
             public void onClick(View view) {
                 EditText et_master = (EditText) findViewById(R.id.et_masterip);
@@ -68,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 InetAddress serverAddr = InetAddress.getByName(masterIP);
                 //connect to master car
                 socket = new Socket(serverAddr, masterPort);
-                in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                //in = new BufferedReader(new InputStreamReader(new DataInputStream(new BufferedInputStream(socket.getInputStream()))));
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new DataOutputStream(socket.getOutputStream());
                 ActiveActivity.status = 0;
             } catch (UnknownHostException e1) {
