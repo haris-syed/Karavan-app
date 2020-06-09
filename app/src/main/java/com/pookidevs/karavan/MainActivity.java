@@ -51,10 +51,6 @@ public class MainActivity extends AppCompatActivity {
                 //switch to Active activity
                 Intent activeActivity = new Intent(MainActivity.this, ActiveActivity.class);
                 startActivity(activeActivity);
-//                Intent intent = getIntent();
-//                finish();
-//                startActivity(intent);
-//                Toast.makeText(getApplicationContext(),"Connecton failed. Try again!!!",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -71,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 InetAddress serverAddr = InetAddress.getByName(masterIP); //resolve address
                 //connect to master car
                 socket = new Socket(serverAddr, masterPort);// make socket
-                //in = new BufferedReader(new InputStreamReader(new DataInputStream(new BufferedInputStream(socket.getInputStream()))));
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream())); //make input stream
                 out = new DataOutputStream(socket.getOutputStream()); //make output stream
                 ActiveActivity.status = 0; // if no exception was thrown set status to idle

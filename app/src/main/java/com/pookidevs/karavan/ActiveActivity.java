@@ -12,7 +12,6 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 
 public class ActiveActivity extends AppCompatActivity {
 
@@ -49,7 +48,6 @@ public class ActiveActivity extends AppCompatActivity {
         marker2 = findViewById(R.id.marker2);
         marker3 = findViewById(R.id.marker3);
         marker4 = findViewById(R.id.marker4);
-        //status = 0;
         position = 0; //initial position unknown
 
         //start status monitor for updating UI
@@ -75,30 +73,31 @@ public class ActiveActivity extends AppCompatActivity {
     //called when a location button is pressed
     public void setDestination(View v){
         switch (v.getId()){
+            //color codes
             //#88FF2929 = red
             //#882979FF =blue
             //check which button was clicked
             case R.id.button:
                 disableButtons(); //disable buttons
-                b1.setBackgroundColor(Color.parseColor("#88FF2929")); //change color for selected button
+                b1.setBackgroundColor(getResources().getColor(R.color.reddark)); //change color for selected button
                 Thread t = new Thread ( new goToLocation(1)); //launch thread to send location to car
                 t.start();
                 break;
             case R.id.button2:
                 disableButtons();
-                b2.setBackgroundColor(Color.parseColor("#88FF2929"));
+                b2.setBackgroundColor(getResources().getColor(R.color.reddark));
                 t = new Thread ( new goToLocation(2));
                 t.start();
                 break;
             case R.id.button3:
                 disableButtons();
-                b3.setBackgroundColor(Color.parseColor("#88FF2929"));
+                b3.setBackgroundColor(getResources().getColor(R.color.reddark));
                 t = new Thread ( new goToLocation(3));
                 t.start();
                 break;
             case R.id.button4:
                 disableButtons();
-                b4.setBackgroundColor(Color.parseColor("#88FF2929"));
+                b4.setBackgroundColor(getResources().getColor(R.color.reddark));
                 t = new Thread ( new goToLocation(4));
                 t.start();
                 break;
@@ -125,10 +124,10 @@ public class ActiveActivity extends AppCompatActivity {
                 b2.setEnabled(true);
                 b3.setEnabled(true);
                 b4.setEnabled(true);
-                b1.setBackgroundColor(Color.parseColor("#882979FF"));
-                b2.setBackgroundColor(Color.parseColor("#882979FF"));
-                b3.setBackgroundColor(Color.parseColor("#882979FF"));
-                b4.setBackgroundColor(Color.parseColor("#882979FF"));
+                b1.setBackgroundColor(getResources().getColor(R.color.blue));
+                b2.setBackgroundColor(getResources().getColor(R.color.blue));
+                b3.setBackgroundColor(getResources().getColor(R.color.blue));
+                b4.setBackgroundColor(getResources().getColor(R.color.blue));
             }
         });
     }
@@ -280,8 +279,6 @@ public class ActiveActivity extends AppCompatActivity {
                         disableMarkers();
                         marker4.setVisibility(View.VISIBLE);
                     }
-//                    trackImage.setVisibility(View.INVISIBLE);
-//                    trackImage.setVisibility(View.VISIBLE);
                 }
             });
 
