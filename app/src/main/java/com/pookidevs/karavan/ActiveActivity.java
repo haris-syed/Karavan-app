@@ -3,7 +3,6 @@ package com.pookidevs.karavan;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -73,9 +72,6 @@ public class ActiveActivity extends AppCompatActivity {
     //called when a location button is pressed
     public void setDestination(View v){
         switch (v.getId()){
-            //color codes
-            //#88FF2929 = red
-            //#882979FF =blue
             //check which button was clicked
             case R.id.button:
                 disableButtons(); //disable buttons
@@ -172,7 +168,6 @@ public class ActiveActivity extends AppCompatActivity {
                     if(response == null){ //means the server died
                         ActiveActivity.status = -1;
                         ActiveActivity.position = 0;
-                        response="";
                         System.err.println("Server died");
                         break;
                     }
